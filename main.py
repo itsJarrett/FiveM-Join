@@ -13,19 +13,19 @@ joined = False
 
 def server_json():
     if server_online():
-        req = requests.get('https://servers-live.fivem.net/api/servers/single/' + server_ip)
+        req = requests.get('http://' + server_ip + '/players.json')
         return req.json()
 
 
 def server_online():
-    req = requests.get('https://servers-live.fivem.net/api/servers/single/' + server_ip)
+    req = requests.get('http://' + server_ip + '/players.json')
     if req.status_code == 200:
         return True
     return False
 
 
 def server_joinable():
-    if server_online() and server_json()["Data"]["clients"] < 32:
+    if server_online() and len(server_json()) < 32:
         return True
     else:
         return False
@@ -74,7 +74,7 @@ def main():
             if not server_online():
                 print "Server Offline..."
             else:
-                print "Full... Player Count: " + str(server_json()["Data"]["clients"])
+                print "Full... Player Count: " + str(len(server_json()))
 
 
 if __name__ == "__main__":
